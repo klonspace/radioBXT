@@ -10,7 +10,7 @@ const config = {
   },
   http: {
     port: 8000,
-    mediaroot: '/Users/callumross/Documents/PERSONAL\ WORK/testradio/streamloc/',
+    mediaroot: 'media',
     webroot: '*',
     allow_origin: '*'
   },

@@ -1,21 +1,23 @@
 const NodeMediaServer = require('./');
 
+const PORT = process.env.PORT || 3000;
+
 const config = {
   rtmp: {
-    port: 1935,
+    port: PORT,
     chunk_size: 5000,
     gop_cache: true,
     ping: 30,
     ping_timeout: 60
   },
   http: {
-    port: 8000,
-    mediaroot: 'media',
+    port: PORT,
+    mediaroot: '/Users/callumross/Documents/PERSONAL\ WORK/testradio/streamloc/',
     webroot: '*',
     allow_origin: '*'
   },
   https: {
-    port: 8443,
+    port: PORT,
     key: './privatekey.pem',
     cert: './certificate.pem',
   },

@@ -1,5 +1,28 @@
 const NodeMediaServer = require('./');
+const md5 = require('md5');
 const PORT = process.env.PORT || 1935;
+const express = require('express');
+
+const app = express();
+var http = require('http').createServer(app);
+
+
+var bodyParser = require('body-parser');
+
+//express server for getting last files
+
+http.listen(1337, function () {
+  console.log('Express app listening on port 80');
+});
+
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+var routes = require('./routes')();
+app.use('/', routes);
+
 
 const config = {
   rtmp: {
@@ -10,8 +33,8 @@ const config = {
     ping_timeout: 60
   },
   http: {
-    port: 8000,
-    mediaroot: 'media',
+    port: 7000,
+    mediaroot: './media',
     webroot: '*',
     allow_origin: '*'
   },
@@ -20,24 +43,32 @@ const config = {
     api_user: 'admin',
     api_pass: 'admin',
     play: false,
-    publish: false,
-    secret: 'nodemedia2017privatekey'
+    publish: true,
+    secret: 'purephaseSECRETEdeBREX1TR4D1-0'
   },
-  // trans: {
-  //   ffmpeg: '/usr/local/bin/ffmpeg',
-  //   tasks: [
-  //     {
-  //       app: 'live',
-  //       hls: true,
-  //       hlsFlags: '[hls_time=2:hls_list_size=3:hls_flags=delete_segments]',
-  //       dash: true,
-  //       dashFlags: '[f=dash:window_size=3:extra_window_size=5]'
-  //     }
-  //   ]
-  // }
+  
+  trans: {
+    ffmpeg: '/usr/bin/ffmpeg',
+    tasks: [
+      {
+        app: 'live',
+        hls: true,
+        hlsFlags: '[hls_time=2:hls_list_size=3:hls_flags=delete_segments]',
+        dash: true,
+        dashFlags: '[f=dash:window_size=3:extra_window_size=5]',
+        mp4: true,
+        mp4Flags: '[movflags=faststart]',
+      }
+    ]
+  }
+  
 };
 
-
+var streamName = "WOOT";
+var expiration = Math.floor(Date.now() / 1000) + (86400 * 365);
+var hashValue =  md5("/live/"+streamName+"-"+expiration+"-purephaseSECRETEdeBREX1TR4D1-0");
+var link = "live/"+streamName+"?sign="+expiration+"-"+hashValue;
+console.log(link);
 var nms = new NodeMediaServer(config)
 nms.run();
 
